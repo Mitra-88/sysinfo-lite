@@ -1,14 +1,26 @@
 import platform
 
+def normalize_architecture(arch):
+    mapping = {
+        "x86_64": "64-Bit",
+        "amd64": "64-Bit",
+        "arm64": "ARM64",
+        "aarch64": "ARM64",
+        "64bit": "64-Bit",
+    }
+    return mapping.get(arch.lower(), arch)
+
 def get_system_info():
     system = platform.system()
-    raw_arch = platform.architecture()[0]
-    arch = normalize_architecture(raw_arch)
+
+    arch = normalize_architecture(platform.architecture()[0])
 
     if system == "Windows":
+        # Windows-specific details: edition, release, and build version
         edition = platform.win32_edition()
         release = platform.release()
-        return f"{system} {release} {edition} {arch}".strip()
+        version = platform.version()
+        return f"{system} {release} {edition} (Build {version}) {arch}".strip()
 
     elif system == "Linux":
         try:
@@ -28,24 +40,16 @@ def get_system_info():
             # PART 3 — full fallback if freedesktop_os_release fails
             system_name = platform.system()
             release = platform.release()
-            raw_arch = platform.architecture()[0]
-            return f"{system_name} {release} {normalize_architecture(raw_arch)}"
+            return f"{system_name} {release} {arch}"
 
     elif system == "Darwin":
-        return f"macOS {platform.release()} {arch}"
+        # macOS: get human-readable version (e.g., 14.1 instead of Darwin 23.0.0)
+        mac_version, *_ = platform.mac_ver()
+        return f"macOS {mac_version or platform.release()} {arch}"
 
     # Other / unknown systems
     else:
         return f"{system} {arch}"
 
-def normalize_architecture(arch):
-    mapping = {
-        "x86_64": "64-Bit",
-        "amd64": "64-Bit",
-        "arm64": "ARM64",
-        "aarch64": "ARM64",
-        "64bit": "64-Bit",
-    }
-    return mapping.get(arch.lower(), arch)
-
-system_info = get_system_info()
+if __name__ == "__main__":
+    print(get_system_info())
