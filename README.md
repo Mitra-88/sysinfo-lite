@@ -10,7 +10,7 @@
 
 - Windows 11 Professional 64-Bit
 - Fedora Linux 43 (Workstation Edition) 64-Bit
-- macOS 26.0.1 ARM64
+- macOS 15.7.1 ARM64
 
 ## Features ✨
 
