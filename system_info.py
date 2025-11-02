@@ -7,7 +7,8 @@ def get_system_info():
 
     if system == "Windows":
         edition = platform.win32_edition()
-        return f"{system} {edition} {arch}".strip()
+        release = platform.release()
+        return f"{system} {release} {edition} {arch}".strip()
 
     elif system == "Linux":
         try:
