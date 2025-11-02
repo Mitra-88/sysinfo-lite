@@ -10,24 +10,30 @@ def get_system_info():
         return f"{system} {edition} {arch}".strip()
 
     elif system == "Linux":
-        os_release = platform.freedesktop_os_release()
+        try:
+            os_release = platform.freedesktop_os_release()
 
-        if "PRETTY_NAME" in os_release:
-            return f"{os_release['PRETTY_NAME']} {arch}"
+            # PART 1 — PRETTY_NAME
+            if "PRETTY_NAME" in os_release:
+                return f"{os_release['PRETTY_NAME']} {arch}"
 
-        name = os_release.get("NAME", "Linux")
-        version = os_release.get("VERSION", "")
-        if name or version:
-            return f"{name} {version} {arch}".strip()
+            # PART 2 — NAME + VERSION fallback
+            name = os_release.get("NAME", "Linux")
+            version = os_release.get("VERSION", "")
+            if name or version:
+                return f"{name} {version} {arch}".strip()
 
-        system_name = platform.system()
-        release = platform.release()
-        raw_arch = platform.architecture()[0]
-        return f"{system_name} {release} {normalize_architecture(raw_arch)}"
+        except OSError:
+            # PART 3 — full fallback if freedesktop_os_release fails
+            system_name = platform.system()
+            release = platform.release()
+            raw_arch = platform.architecture()[0]
+            return f"{system_name} {release} {normalize_architecture(raw_arch)}"
 
     elif system == "Darwin":
         return f"macOS {platform.release()} {arch}"
 
+    # Other / unknown systems
     else:
         return f"{system} {arch}"
 
