@@ -53,7 +53,11 @@ def get_system_info():
     # Other / unknown systems
     # FreeBSD 14.0 64-Bit
     else:
-        return f"{system} {arch}"
+        system_name = system
+        release = platform.release()
+        arch_info = arch
+        # FreeBSD 14.0-RELEASE 64-Bit
+        return f"{system_name} {release} {arch_info}"
 
 if __name__ == "__main__":
     print(get_system_info())
