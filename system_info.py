@@ -46,7 +46,7 @@ def get_system_info():
             return f"{system_name} {release} {arch}"
 
     elif system == "Darwin":
-        # macOS 26.1 64-Bit
+        # macOS 26.1 ARM64
         mac_version, *_ = platform.mac_ver()
         return f"macOS {mac_version or platform.release()} {arch}"
 
