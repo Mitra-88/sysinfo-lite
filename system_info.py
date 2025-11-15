@@ -3,7 +3,7 @@ import platform
 def normalize_architecture(arch):
     mapping = {
         "x86_64": "64-Bit",
-        "amd64": "64-Bit",
+        "amd64": "AMD64",
         "arm64": "ARM64",
         "aarch64": "ARM64",
         "64bit": "64-Bit",
