@@ -40,7 +40,7 @@ def get_system_info():
 
         except OSError:
             # PART 3 — full fallback if freedesktop_os_release fails
-            # Linux 6.17.7-generic 64-Bit 
+            # Linux 6.17.7-generic 64-Bit
             system_name = platform.system()
             release = platform.release()
             return f"{system_name} {release} {arch}"
@@ -51,7 +51,6 @@ def get_system_info():
         return f"macOS {mac_version or platform.release()} {arch}"
 
     # Other / unknown systems
-    # FreeBSD 14.0 64-Bit
     else:
         system_name = system
         release = platform.release()
