@@ -2,9 +2,11 @@
 
 **SysLite** is a tiny Python utility that tells you your OS and architecture.
 
+> ⚠️ **Note:** Windows 11 detection requires **Python 3.12+**. Older Python versions report it as Windows 10.
+
 ## Why bother? 🤔
 
-`platform.platform()` is okay. Mid. Works, but sometimes messy. SysLite gives you **exactly what you need**: OS, version, and architecture in one clean string. 💡
+`platform.platform()` is okay. Mid. Works, but messy. SysLite gives you **exactly what you need**: OS, version, and architecture in one clean string. 💡
 
 ## Example Output 🎯
 
