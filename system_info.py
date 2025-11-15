@@ -3,7 +3,7 @@ import platform
 def normalize_architecture(arch):
     mapping = {
         "x86_64": "64-Bit",
-        "amd64": "64-Bit",
+        "amd64": "AMD64",
         "arm64": "ARM64",
         "aarch64": "ARM64",
         "64bit": "64-Bit",
@@ -51,7 +51,6 @@ def get_system_info():
         return f"macOS {mac_version or platform.release()} {arch}"
 
     # Other / unknown systems
-    # FreeBSD 14.0 64-Bit
     else:
         system_name = system
         release = platform.release()
