@@ -16,7 +16,7 @@ def get_system_info():
     arch = normalize_architecture(platform.machine())
 
     if system == "Windows":
-        # Windows 11 Professional (Build 10.0.26200) 64-Bit
+        # Windows 11 Professional (Build 10.0.26200) AMD64
         edition = platform.win32_edition()
         release = platform.release()
         version = platform.version()
@@ -27,12 +27,12 @@ def get_system_info():
             os_release = platform.freedesktop_os_release()
 
             # PART 1 — PRETTY_NAME
-            # Pop!_OS 22.04 LTS 64-Bit
+            # Pop!_OS 22.04 LTS AMD64
             if "PRETTY_NAME" in os_release:
                 return f"{os_release['PRETTY_NAME']} {arch}"
 
             # PART 2 — NAME + VERSION fallback
-            # Arch Linux 64-Bit
+            # Arch Linux AMD64
             name = os_release.get("NAME", "Linux")
             version = os_release.get("VERSION", "")
             if name or version:
@@ -40,7 +40,7 @@ def get_system_info():
 
         except OSError:
             # PART 3 — full fallback if freedesktop_os_release fails
-            # Linux 6.17.7-generic 64-Bit
+            # Linux 6.17.7-generic AMD64
             system_name = platform.system()
             release = platform.release()
             return f"{system_name} {release} {arch}"
@@ -55,7 +55,7 @@ def get_system_info():
         system_name = system
         release = platform.release()
         arch_info = arch
-        # FreeBSD 14.0-RELEASE 64-Bit
+        # FreeBSD 15.0-RELEASE AMD64
         return f"{system_name} {release} {arch_info}"
 
 if __name__ == "__main__":
