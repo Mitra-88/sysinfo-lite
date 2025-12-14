@@ -27,12 +27,12 @@ def get_system_info():
             os_release = platform.freedesktop_os_release()
 
             # PART 1 — PRETTY_NAME
-            # Pop!_OS 22.04 LTS AMD64
+            # Pop!_OS 24.04 LTS 64-Bit
             if "PRETTY_NAME" in os_release:
                 return f"{os_release['PRETTY_NAME']} {arch}"
 
             # PART 2 — NAME + VERSION fallback
-            # Arch Linux AMD64
+            # Arch Linux 64-Bit
             name = os_release.get("NAME", "Linux")
             version = os_release.get("VERSION", "")
             if name or version:
@@ -40,7 +40,7 @@ def get_system_info():
 
         except OSError:
             # PART 3 — full fallback if freedesktop_os_release fails
-            # Linux 6.17.7-generic AMD64
+            # Linux 6.17.7-generic 64-Bit
             system_name = platform.system()
             release = platform.release()
             return f"{system_name} {release} {arch}"

@@ -6,7 +6,7 @@
 
 ## Why bother? 🤔
 
-`platform.platform()` is okay. Mid. Works, but messy. SysLite gives you **exactly what you need**: OS, version, and architecture in one clean string. 💡
+`platform.platform()` works, but it’s messy and mid-tier. SysLite, on the other hand, gives you **precisely what you need** OS, version, and architecture all in one clean, readable string.
 
 ## Example Output 🎯
 
