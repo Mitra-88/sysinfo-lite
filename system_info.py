@@ -1,4 +1,5 @@
 import platform
+import winreg
 
 def normalize_architecture(arch):
     mapping = {
@@ -10,17 +11,28 @@ def normalize_architecture(arch):
     }
     return mapping.get(arch.lower(), arch)
 
+def get_windows_feature_update():
+    try:
+        key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
+            display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
+            return display_version
+    except Exception:
+        return None
+
 def get_system_info():
     system = platform.system()
-
     arch = normalize_architecture(platform.machine())
 
     if system == "Windows":
-        # Windows 11 Professional (Build 10.0.26200) AMD64
+        # Windows 11 25H2 Professional (Build 10.0.26200) AMD64
         edition = platform.win32_edition()
         release = platform.release()
         version = platform.version()
-        return f"{system} {release} {edition} (Build {version}) {arch}".strip()
+        feature_update = get_windows_feature_update()
+
+        feature_part = f"{feature_update} " if feature_update else ""
+        return f"{system} {release} {feature_part}{edition} (Build {version}) {arch}".strip()
 
     elif system == "Linux":
         try:
@@ -40,7 +52,7 @@ def get_system_info():
 
         except OSError:
             # PART 3 — full fallback if freedesktop_os_release fails
-            # Linux 6.17.7-generic 64-Bit
+            # Linux 6.18.8-generic 64-Bit
             system_name = platform.system()
             release = platform.release()
             return f"{system_name} {release} {arch}"
@@ -50,7 +62,6 @@ def get_system_info():
         mac_version, *_ = platform.mac_ver()
         return f"macOS {mac_version or platform.release()} {arch}"
 
-    # Other / unknown systems
     else:
         system_name = system
         release = platform.release()
