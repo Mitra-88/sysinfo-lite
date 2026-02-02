@@ -1,5 +1,4 @@
 import platform
-import winreg
 
 def normalize_architecture(arch):
     mapping = {
@@ -12,7 +11,12 @@ def normalize_architecture(arch):
     return mapping.get(arch.lower(), arch)
 
 def get_windows_feature_update():
+    if platform.system() != "Windows":
+        return None
+
     try:
+        import winreg
+        
         key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
             display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
@@ -61,13 +65,6 @@ def get_system_info():
         # macOS 26.1 ARM64
         mac_version, *_ = platform.mac_ver()
         return f"macOS {mac_version or platform.release()} {arch}"
-
-    else:
-        system_name = system
-        release = platform.release()
-        arch_info = arch
-        # FreeBSD 15.0-RELEASE AMD64
-        return f"{system_name} {release} {arch_info}"
 
 if __name__ == "__main__":
     print(get_system_info())
