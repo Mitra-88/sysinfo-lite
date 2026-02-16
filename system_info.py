@@ -56,13 +56,13 @@ def get_system_info():
 
         except OSError:
             # PART 3 — full fallback if freedesktop_os_release fails
-            # Linux 6.18.8-generic 64-Bit
+            # Linux 6.18.10-generic 64-Bit
             system_name = platform.system()
             release = platform.release()
             return f"{system_name} {release} {arch}"
 
     elif system == "Darwin":
-        # macOS 26.1 ARM64
+        # macOS 26.3 ARM64
         mac_version, *_ = platform.mac_ver()
         return f"macOS {mac_version or platform.release()} {arch}"
 
