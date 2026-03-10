@@ -10,9 +10,9 @@
 
 ## Example Output 🎯
 
-- Windows 11 Professional 64-Bit
-- Fedora Linux 43 (Workstation Edition) 64-Bit
-- macOS 15.7.1 ARM64
+- Windows 11 25H2 Professional (Build 10.0.26200) AMD64
+- Ubuntu 24.04.4 LTS 64-Bit
+- macOS 15.7.3 ARM64
 
 ## Features ✨
 
