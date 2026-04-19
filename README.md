@@ -12,7 +12,7 @@
 
 - Windows 11 25H2 Professional (Build 10.0.26200) AMD64
 - Ubuntu 24.04.4 LTS 64-Bit
-- macOS 15.7.3 ARM64
+- macOS 26.4.1 ARM64
 
 ## Features ✨
 
@@ -21,7 +21,7 @@
   * `x86_64` → `64-Bit`
   * `arm64` / `aarch64` → `ARM64`
 * Handles Linux fallback nicely 🔄
-* Zero dependencies. Pure Python 🐍
+* No external dependencies (standard library only) 🐍
 
 ## How it works 🛠️
 
