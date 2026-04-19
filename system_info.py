@@ -1,5 +1,6 @@
 import platform
 
+
 def normalize_architecture(arch):
     mapping = {
         "x86_64": "64-Bit",
@@ -10,19 +11,21 @@ def normalize_architecture(arch):
     }
     return mapping.get(arch.lower(), arch)
 
+
 def get_windows_feature_update():
     if platform.system() != "Windows":
         return None
 
     try:
         import winreg
-        
+
         key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
             display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
             return display_version
     except Exception:
         return None
+
 
 def get_system_info():
     system = platform.system()
@@ -43,7 +46,7 @@ def get_system_info():
             os_release = platform.freedesktop_os_release()
 
             # PART 1 — PRETTY_NAME
-            # Pop!_OS 24.04 LTS 64-Bit
+            # Ubuntu 24.04.4 LTS 64-Bit
             if "PRETTY_NAME" in os_release:
                 return f"{os_release['PRETTY_NAME']} {arch}"
 
@@ -56,15 +59,16 @@ def get_system_info():
 
         except OSError:
             # PART 3 — full fallback if freedesktop_os_release fails
-            # Linux 6.18.10-generic 64-Bit
+            # Linux 6.19.13-generic 64-Bit
             system_name = platform.system()
             release = platform.release()
             return f"{system_name} {release} {arch}"
 
     elif system == "Darwin":
-        # macOS 26.3 ARM64
+        # macOS 26.4.1 ARM64
         mac_version, *_ = platform.mac_ver()
         return f"macOS {mac_version or platform.release()} {arch}"
+
 
 if __name__ == "__main__":
     print(get_system_info())
