@@ -79,23 +79,27 @@ def get_system_info() -> str:
             build_number = int(build)
         except ValueError:
             build_number = 0
-        if "Server" in (info.get("ProductName") or ""):
-            release = platform.release()
-        elif (
-            info.get("CurrentMajorVersionNumber") == "10"
-            and build_number >= WINDOWS_11_MIN_BUILD
-        ):
-            release = "11"
+        product = info.get("ProductName") or ""
+        if "Server" in product:
+            release = product.replace("Windows", "", 1).strip()
+            edition = None
         else:
-            release = info.get("CurrentMajorVersionNumber") or platform.release()
+            if (
+                info.get("CurrentMajorVersionNumber") == "10"
+                and build_number >= WINDOWS_11_MIN_BUILD
+            ):
+                release = "11"
+            else:
+                release = info.get("CurrentMajorVersionNumber") or platform.release()
+            win32_edition = getattr(platform, "win32_edition", None)
+            edition = win32_edition() if win32_edition is not None else None
+            edition = edition or info.get("EditionID")
         feature = info.get("DisplayVersion") or info.get("ReleaseId")
-        win32_edition = getattr(platform, "win32_edition", None)
-        edition = win32_edition() if win32_edition is not None else None
         return join_parts(
             system,
             release,
             feature,
-            edition or info.get("EditionID"),
+            edition,
             f"(Build {build})",
             arch,
         )

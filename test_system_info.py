@@ -149,18 +149,19 @@ class WindowsTests(unittest.TestCase):
                 "Windows 10 2004 Professional (Build 19041) AMD64",
             )
 
-    def test_server_editions_use_platform_release(self):
+    def test_server_release_comes_from_product_name(self):
         with self.patch_windows(
             windows_registry(
-                ProductName="Windows Server 2022 Standard",
-                DisplayVersion=None,
-                CurrentBuildNumber="20348",
+                ProductName="Windows Server 2025 Datacenter",
+                DisplayVersion="24H2",
+                CurrentBuildNumber="26100",
             ),
-            release="Server2022",
+            release="2025Server",
+            edition="ServerDatacenter",
         ):
             self.assertEqual(
                 system_info.get_system_info(),
-                "Windows Server2022 Professional (Build 20348) AMD64",
+                "Windows Server 2025 Datacenter 24H2 (Build 26100) AMD64",
             )
 
     def test_registry_unavailable_falls_back_to_platform(self):

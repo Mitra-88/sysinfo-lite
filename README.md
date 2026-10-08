@@ -11,6 +11,7 @@ Works on **Python 3.7+**. Windows 11 is detected from the registry, so it report
 ## Example Output 🎯
 
 - Windows 11 25H2 Professional (Build 26200) AMD64
+- Windows Server 2025 Datacenter 24H2 (Build 26100) AMD64
 - Ubuntu 26.04.1 LTS 64-Bit
 - macOS 26.7.1 ARM64
 
