@@ -12,16 +12,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.10", "3.12"]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, ubuntu-26.04, ubuntu-26.04-arm, windows-2022, windows-2025, macos-26, macos-26-intel]
+        python-version: ["3.10", "3.12", "3.14"]
         exclude:
-          # setup-python's x64 Python 3.10 build aborts on ARM macOS
-          # runners (dyld: Library not loaded ... libintl.8.dylib).
-          - os: macos-latest
+          # macOS 26 images ship Python 3.11+ only; asking for 3.10 there
+          # pulls the x64 toolchain build that aborts on ARM (dyld:
+          # libintl.8.dylib not found).
+          - os: macos-26
             python-version: "3.10"
-        include:
-          - os: macos-latest
-            python-version: "3.14"
+          - os: macos-26-intel
+            python-version: "3.10"
 
     steps:
       - name: Checkout repository

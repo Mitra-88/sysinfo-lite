@@ -12,7 +12,7 @@ Works on **Python 3.7+**. Windows 11 is detected from the registry, so it report
 
 - Windows 11 25H2 Professional (Build 26200) AMD64
 - Ubuntu 26.04.1 LTS 64-Bit
-- macOS 26.5.2 ARM64
+- macOS 26.7.1 ARM64
 
 ## Features ✨
 
@@ -42,6 +42,6 @@ The platform calls are mocked, so the suite runs on any OS:
 python -m unittest discover -v
 ```
 
-CI runs the suite on Linux, Windows, and macOS with Python 3.10 and 3.12.
+CI runs the suite on Ubuntu 24.04 and 26.04 (x64 and Arm64), Windows Server 2022 and 2025, and macOS 26 (Arm64 and Intel), with Python 3.10, 3.12, and 3.14.
 
 Basically, clean, simple, and doesn’t overcomplicate things. ✅
