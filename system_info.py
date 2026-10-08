@@ -1,73 +1,123 @@
+from __future__ import annotations
+
 import platform
 
+WINDOWS_REGISTRY_PATH = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+WINDOWS_REGISTRY_VALUES = (
+    "ProductName",
+    "DisplayVersion",
+    "ReleaseId",
+    "EditionID",
+    "CurrentBuildNumber",
+    "CurrentMajorVersionNumber",
+)
+WINDOWS_11_MIN_BUILD = 22000
+MACOS_VERSION_PLIST = "/System/Library/CoreServices/SystemVersion.plist"
 
-def normalize_architecture(arch):
+
+def normalize_architecture(arch: str) -> str:
     mapping = {
         "x86_64": "64-Bit",
         "amd64": "AMD64",
         "arm64": "ARM64",
         "aarch64": "ARM64",
-        "64bit": "64-Bit",
     }
     return mapping.get(arch.lower(), arch)
 
 
-def get_windows_feature_update():
+def join_parts(*parts: str | None) -> str:
+    return " ".join(str(part) for part in parts if part)
+
+
+def get_windows_registry_info() -> dict[str, str | None] | None:
     if platform.system() != "Windows":
         return None
-
     try:
         import winreg
 
-        key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
-        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
-            display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
-            return display_version
-    except Exception:
+        with winreg.OpenKey(
+            winreg.HKEY_LOCAL_MACHINE,
+            WINDOWS_REGISTRY_PATH,
+            access=winreg.KEY_READ | winreg.KEY_WOW64_64KEY,
+        ) as key:
+            info: dict[str, str | None] = {}
+            for name in WINDOWS_REGISTRY_VALUES:
+                try:
+                    value, _ = winreg.QueryValueEx(key, name)
+                    info[name] = str(value)
+                except OSError:
+                    info[name] = None
+            return info
+    except OSError:
         return None
 
 
-def get_system_info():
+def get_macos_version() -> str | None:
+    version = platform.mac_ver()[0]
+    if version:
+        return version
+    try:
+        import plistlib
+    except ImportError:
+        return None
+    try:
+        with open(MACOS_VERSION_PLIST, "rb") as plist_file:
+            info = plistlib.load(plist_file)
+    except (OSError, plistlib.InvalidFileException, AttributeError):
+        return None
+    return info.get("ProductUserVisibleVersion")
+
+
+def get_system_info() -> str:
     system = platform.system()
     arch = normalize_architecture(platform.machine())
 
     if system == "Windows":
-        # Windows 11 25H2 Professional (Build 10.0.26200) AMD64
-        edition = platform.win32_edition()
-        release = platform.release()
-        version = platform.version()
-        feature_update = get_windows_feature_update()
+        info = get_windows_registry_info() or {}
+        build = info.get("CurrentBuildNumber") or platform.version().split(".")[-1]
+        try:
+            build_number = int(build)
+        except ValueError:
+            build_number = 0
+        if "Server" in (info.get("ProductName") or ""):
+            release = platform.release()
+        elif (
+            info.get("CurrentMajorVersionNumber") == "10"
+            and build_number >= WINDOWS_11_MIN_BUILD
+        ):
+            release = "11"
+        else:
+            release = info.get("CurrentMajorVersionNumber") or platform.release()
+        feature = info.get("DisplayVersion") or info.get("ReleaseId")
+        win32_edition = getattr(platform, "win32_edition", None)
+        edition = win32_edition() if win32_edition is not None else None
+        return join_parts(
+            system,
+            release,
+            feature,
+            edition or info.get("EditionID"),
+            f"(Build {build})",
+            arch,
+        )
 
-        feature_part = f"{feature_update} " if feature_update else ""
-        return f"{system} {release} {feature_part}{edition} (Build {version}) {arch}".strip()
-
-    elif system == "Linux":
+    if system == "Linux":
         try:
             os_release = platform.freedesktop_os_release()
-
-            # PART 1 — PRETTY_NAME
-            # Ubuntu 24.04.4 LTS 64-Bit
             if "PRETTY_NAME" in os_release:
-                return f"{os_release['PRETTY_NAME']} {arch}"
-
-            # PART 2 — NAME + VERSION fallback
-            # Arch Linux 64-Bit
+                return join_parts(os_release["PRETTY_NAME"], arch)
             name = os_release.get("NAME", "Linux")
-            version = os_release.get("VERSION", "")
-            if name or version:
-                return f"{name} {version} {arch}".strip()
+            version = os_release.get("VERSION") or os_release.get("VERSION_ID") or ""
+            return join_parts(name, version, arch)
+        except (AttributeError, OSError, ValueError):
+            return join_parts(system, platform.release(), arch)
 
-        except OSError:
-            # PART 3 — full fallback if freedesktop_os_release fails
-            # Linux 6.19.13-generic 64-Bit
-            system_name = platform.system()
-            release = platform.release()
-            return f"{system_name} {release} {arch}"
+    if system == "Darwin":
+        mac_version = get_macos_version()
+        if mac_version:
+            return join_parts("macOS", mac_version, arch)
+        return join_parts("macOS", f"(Darwin {platform.release()})", arch)
 
-    elif system == "Darwin":
-        # macOS 26.4.1 ARM64
-        mac_version, *_ = platform.mac_ver()
-        return f"macOS {mac_version or platform.release()} {arch}"
+    return join_parts(system, platform.release(), arch)
 
 
 if __name__ == "__main__":
