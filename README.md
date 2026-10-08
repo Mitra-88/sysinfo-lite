@@ -42,6 +42,6 @@ The platform calls are mocked, so the suite runs on any OS:
 python -m unittest discover -v
 ```
 
-CI runs the suite on Ubuntu 24.04 and 26.04 (x64 and Arm64), Windows Server 2022 and 2025, and macOS 26 (Arm64 and Intel), with Python 3.10, 3.12, and 3.14.
+CI runs the suite on Ubuntu 26.04, Windows Server 2025, and macOS 26 with Python 3.14.
 
 Basically, clean, simple, and doesn’t overcomplicate things. ✅

@@ -263,21 +263,21 @@ class MacOSTests(unittest.TestCase):
         with mock.patch.object(platform, "system", return_value="Darwin"), \
                 mock.patch.object(platform, "machine", return_value="arm64"), \
                 mock.patch.object(system_info, "get_macos_version",
-                                  return_value="26.5.2"):
-            self.assertEqual(system_info.get_system_info(), "macOS 26.5.2 ARM64")
+                                  return_value="26.7.1"):
+            self.assertEqual(system_info.get_system_info(), "macOS 26.7.1 ARM64")
 
     def test_labels_darwin_kernel_release_when_version_unknown(self):
         with mock.patch.object(platform, "system", return_value="Darwin"), \
                 mock.patch.object(platform, "machine", return_value="arm64"), \
                 mock.patch.object(system_info, "get_macos_version", return_value=None), \
-                mock.patch.object(platform, "release", return_value="25.0.0"):
-            self.assertEqual(system_info.get_system_info(), "macOS (Darwin 25.0.0) ARM64")
+                mock.patch.object(platform, "release", return_value="25.6.0"):
+            self.assertEqual(system_info.get_system_info(), "macOS (Darwin 25.6.0) ARM64")
 
 
 class MacOSVersionTests(unittest.TestCase):
     def test_prefers_mac_ver(self):
-        with mock.patch.object(platform, "mac_ver", return_value=("26.5.2", "", "")):
-            self.assertEqual(system_info.get_macos_version(), "26.5.2")
+        with mock.patch.object(platform, "mac_ver", return_value=("26.7.1", "", "")):
+            self.assertEqual(system_info.get_macos_version(), "26.7.1")
 
     def test_reads_version_from_plist(self):
         data = plistlib.dumps({"ProductUserVisibleVersion": "15.2"})
