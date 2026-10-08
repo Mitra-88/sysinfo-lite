@@ -2,7 +2,7 @@
 
 **SysLite** is a tiny Python utility that tells you your OS and architecture.
 
-Works on **Python 3.7+**. Windows 11 is detected from the registry, so it reports correctly on any Python version — no 3.12+ requirement.
+Works on **Python 3.7+**. Windows 11 is detected from the registry, so it reports correctly on any Python version: no 3.12+ requirement.
 
 ## Why bother? 🤔
 
@@ -18,7 +18,7 @@ Works on **Python 3.7+**. Windows 11 is detected from the registry, so it report
 
 * Focused on **64-bit systems** 🎯
 * Works on **Windows**, **Linux**, and **macOS**, with a generic fallback everywhere else 💻🍏🐧
-* Always returns a plain string — never `None`, never crashes on odd platforms ✅
+* Always returns a plain string: never `None`, never crashes on odd platforms ✅
 * Detects Windows 11 on any Python version via the registry 🪟
 * Windows edition from `platform.win32_edition()`, with the registry as fallback 🪟
 * Normalizes architecture labels:
